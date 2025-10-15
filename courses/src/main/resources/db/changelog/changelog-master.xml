@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <changeSet id="create_course_table" author="AP">
+        <createTable tableName="courses" schemaName="public">
+            <column name="course_id" type="bigserial">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="course_title" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="course_description" type="varchar(255)"/>
+            <column name="course_author" type="varchar(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="add_course_column" author="AP">
+        <addColumn tableName="courses" schemaName="public">
+            <column name="course_start_date" type="date"/>
+            <column name="course_duration" type="int"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="create_lesson_table" author="AP">
+        <createTable tableName="lesson">
+            <column name="id" type="bigserial">
+                <constraints primaryKey="true" primaryKeyName="lesson_id_pk"/>
+            </column>
+            <column name="name" type="varchar(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="create_user_table" author="AP">
+        <createTable tableName="users">
+            <column name="user_id" type="bigserial">
+                <constraints primaryKey="true" primaryKeyName="user_id_pk"/>
+            </column>
+            <column name="username" type="varchar(255)"/>
+            <column name="password" type="varchar(255)"/>
+            <column name="email" type="varchar(255)">
+                <constraints unique="true"/>
+            </column>
+            <column name="registration_date" type="timestamp"/>
+            <column name="date_changed" type="timestamp"/>
+            <column name="change_author" type="timestamp"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="create_rating_table" author="AP">
+        <createTable tableName="ratings">
+            <column name="id" type="bigserial">
+                <constraints primaryKey="true" primaryKeyName="rating_id_pk"/>
+            </column>
+            <column name="course_id" type="bigserial">
+                <constraints nullable="false" foreignKeyName="fk_ratings_course"
+                             referencedTableName="courses" referencedColumnNames="course_id"/>
+            </column>
+            <column name="score" type="bigint"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="create-user-courses" author="your_name">
+        <createTable tableName="user_courses">
+            <column name="user_id" type="bigserial">
+                <constraints nullable="false"/>
+            </column>
+            <column name="course_id" type="bigserial">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="varchar(20)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addPrimaryKey tableName="user_courses" columnNames="user_id, course_id" constraintName="pk_user_courses"/>
+        <addForeignKeyConstraint baseTableName="user_courses" baseColumnNames="user_id" constraintName="fk_user_courses_user" referencedTableName="users" referencedColumnNames="user_id"/>
+        <addForeignKeyConstraint baseTableName="user_courses" baseColumnNames="course_id" constraintName="fk_user_courses_course" referencedTableName="courses" referencedColumnNames="course_id"/>
+        <addUniqueConstraint
+                tableName="user_courses"
+                columnNames="user_id, course_id"
+                constraintName="uk_user_course_unique"/>
+    </changeSet>
+    <changeSet id="create-lessons-table" author="AP">
+        <createTable tableName="lessons" schemaName="public">
+            <column name="id" type="bigserial">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="title" type="varchar(255)"/>
+            <column name="text" type="varchar(255)"/>
+            <column name="author" type="varchar(255)"/>
+            <column name="date_created" type="timestamp"/>
+            <column name="change_author" type="varchar(255)"/>
+            <column name="date_changed" type="timestamp"/>
+            <column name="course_id" type="bigserial">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint
+                baseTableName="lessons"
+                baseColumnNames="course_id"
+                referencedTableName="courses"
+                referencedColumnNames="course_id"
+                constraintName="fk_lessons_course"/>
+        <createTable tableName="user_lessons" schemaName="public">
+            <column name="lesson_id" type="bigserial">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="bigserial">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addPrimaryKey
+                tableName="user_lessons"
+                columnNames="lesson_id, user_id"
+                constraintName="pk_user_lessons"/>
+        <addForeignKeyConstraint
+                baseTableName="user_lessons"
+                baseColumnNames="lesson_id"
+                referencedTableName="lessons"
+                referencedColumnNames="id"
+                constraintName="fk_user_lessons_lesson"/>
+        <addForeignKeyConstraint
+                baseTableName="user_lessons"
+                baseColumnNames="user_id"
+                referencedTableName="users"
+                referencedColumnNames="user_id"
+                constraintName="fk_user_lessons_user"/>
+    </changeSet>
+    <changeSet id="add-course-category-column" author="AP">
+        <addColumn tableName="courses">
+            <column name="category" type="varchar(50)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="add-course-change-column" author="AP">
+        <addColumn tableName="courses">
+            <column name="change_author" type="varchar(255)"/>
+            <column name="date_created" type="timestamp"/>
+            <column name="date_changed" type="timestamp"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="drop-column" author="AP">
+        <dropColumn tableName="users" columnName="change_author"/>
+    </changeSet>
+    <changeSet id="add-user-role-column" author="AP">
+        <addColumn tableName="users">
+            <column name="change_author" type="varchar(50)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="readd-user-role-column" author="AP">
+        <addColumn tableName="users">
+            <column name="role" type="varchar(50)"/>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

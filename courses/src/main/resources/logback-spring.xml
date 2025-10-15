@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+    <logger name="org.springframework.web" level="DEBUG"/>
+
+    <!--<appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <destination>192.168.66.42:5044</destination>
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <timestamp/>
+                <version/>
+                <loggerName/>
+                <logLevel/>
+                <pattern>
+                    <pattern>
+                        {
+                        "application": "courses",
+                        "level": "%level",
+                        "thread": "%thread",
+                        "message": "%message"
+                        }
+                    </pattern>
+                </pattern>
+                <logstashMarkers/>
+            </providers>
+        </encoder>
+        <includeCallerData>true</includeCallerData>
+        <keepAliveDuration>5 minutes</keepAliveDuration>
+        <reconnectionDelay>10 second</reconnectionDelay>
+        <waitStrategyType>blocking</waitStrategyType>
+        <ringBufferSize>16384</ringBufferSize>
+    </appender>-->
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+    <!--    <appender-ref ref="LOGSTASH"/>-->
+    </root>
+
+</configuration>
