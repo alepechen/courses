@@ -10,7 +10,9 @@ Spring Security (JWT-based authentication)
 
 PostgreSQL
 
-🛠️ Features 🔐 Authentication & Authorization
+🛠️ Features 
+
+🔐 Authentication & Authorization
 
 Secure login using JWT (JSON Web Tokens)
 
