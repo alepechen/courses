@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Formula;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -53,6 +54,9 @@ public class Course {
 
     @OneToMany(mappedBy = "course", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<Lesson> lessons;
+
+    @Formula("(SELECT COUNT(*) FROM user_courses uc WHERE uc.course_id = {alias}.course_id)")
+    private Integer userCount;
 
     public void addLesson(Lesson lesson) {
         lesson.setCourse(this);

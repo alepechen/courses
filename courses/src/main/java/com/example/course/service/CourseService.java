@@ -3,18 +3,18 @@ package com.example.course.service;
 import com.example.course.dao.CourseRepository;
 import com.example.course.dao.UserCourseRepository;
 import com.example.course.dao.entity.Course;
-import com.example.course.dao.entity.CourseCategory;
 import com.example.course.dao.entity.CourseStatus;
 import com.example.course.dao.entity.UserCourse;
 import com.example.course.dto.CourseFilterDto;
+import com.example.course.spec.CourseSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
@@ -73,24 +73,18 @@ public class CourseService {
 
     @Transactional
     public Page<Course> getCourses(CourseFilterDto request) {
-        String sortBy = request.getSortBy() != null ? request.getSortBy() : "users";
-        String direction = "desc".equalsIgnoreCase(request.getDirection()) ? "desc" : "asc";
+        Pageable pageable = buildPageable(request);
+        Specification<Course> spec = CourseSpecification.filter(request);
+        return courseRepository.findAll(spec, pageable);
+    }
+
+    private Pageable buildPageable(CourseFilterDto request) {
         int page = Math.max(request.getPage(), 0);
         int size = request.getSize() > 0 ? request.getSize() : 3;
-        CourseCategory category = StringUtils.hasText(request.getCategory()) ? CourseCategory.valueOf(request.getCategory()) : null;
-        String author = StringUtils.hasText(request.getAuthor()) ? request.getAuthor() : null;
-        Pageable pageable;
-        if ("users".equalsIgnoreCase(sortBy)) {
-            pageable = PageRequest.of(page, size);
-            return courseRepository.findAllOrderByUserCountWithFilters(request.getCategory(), author, pageable);
-        }
-        Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
-        pageable = PageRequest.of(page, size, sort);
-        if (StringUtils.hasText(request.getCategory()) || StringUtils.hasText(request.getAuthor())) {
-            return courseRepository.findByCategoryAndAuthor(category, author, pageable);
-        }
-        return courseRepository.findAll(pageable);
-
+        String sortBy = request.getSortBy() != null ? request.getSortBy() : "userCount";
+        String direction = request.getDirection() != null ? request.getDirection() : "desc";
+        Sort.Direction sortDirection = "desc".equalsIgnoreCase(direction) ? Sort.Direction.DESC : Sort.Direction.ASC;
+        return PageRequest.of(page, size, Sort.by(sortDirection, sortBy));
     }
 }
 
