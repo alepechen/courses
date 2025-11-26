@@ -37,7 +37,7 @@ public class ReportController {
     private final CourseMapper courseMapper;
 
 
-    @GetMapping(value = "/reports/course/{courseId}", produces = "text/csv")
+    @GetMapping(value = "/reports/{courseId}", produces = "text/csv")
     @ApiOperation("Download course report as csv")
     public ResponseEntity<ByteArrayResource> getUsersWithStatus(@PathVariable Long courseId) {
         List<UserCourse> userCourses = service.findUserCoursesByCourseId(courseId);
@@ -63,7 +63,7 @@ public class ReportController {
         return ResponseEntity.ok().headers(headers).contentLength(csvBytes.length).body(resource);
     }
 
-    @GetMapping("user/reports/course/{courseId}")
+    @GetMapping("user/reports/{courseId}")
     @PreAuthorize("hasRole('USER')")
     @ApiOperation("Get user completed lessons for course")
     public ResponseEntity<List<LessonSummaryDto>> getUserWithLessons(@PathVariable("courseId") Long courseId, @RequestParam("userId") Long userId) {
@@ -71,7 +71,7 @@ public class ReportController {
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping("user/reports/{userId}")
+    @GetMapping("user/reports/{userId}/courses")
     @PreAuthorize("hasRole('USER')")
     @ApiOperation("Get user courses")
     public ResponseEntity<List<CourseDto>> getUserWithCourses(@PathVariable("userId") Long userId) {

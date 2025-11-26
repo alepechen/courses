@@ -36,7 +36,7 @@ public class CourseController {
     private final RatingMapper ratingMapper;
     private final LessonMapper lessonMapper;
 
-    @GetMapping("/course/data")
+    @GetMapping("/courses/data")
     @ApiOperation("Get courses")
     public ResponseEntity<List<CourseDto>> findAll() {
         List<CourseDto> dtoList = service.findAll().stream().map(mapper::toDto).collect(Collectors.toList());
@@ -47,7 +47,7 @@ public class CourseController {
         }
     }
 
-    @GetMapping("/course/{id}")
+    @GetMapping("/courses/{id}")
     @ApiOperation("Get course")
     public ResponseEntity<CourseWithLessons> findById(@PathVariable Long id) {
         return service.findById(id).map(course -> {
@@ -60,7 +60,7 @@ public class CourseController {
 
     }
 
-    @GetMapping("/course/find")
+    @GetMapping("/courses/find")
     @ApiOperation("Find courses by title")
     public ResponseEntity<List<CourseDto>> getCoursesByTitlePrefix(@RequestParam(name = "titlePrefix", required = false) String titlePrefix) {
         List<CourseDto> dtoList = service.findByPrefix(requireNonNullElse(titlePrefix, "")).stream().map(mapper::toDto).collect(Collectors.toList());
@@ -71,7 +71,7 @@ public class CourseController {
         }
     }
 
-    @PostMapping("admin/course")
+    @PostMapping("admin/courses")
     @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation("Create course")
     public ResponseEntity<CourseDto> create(@RequestBody @Valid CourseCreateDto courseCreateDto) {
@@ -79,7 +79,7 @@ public class CourseController {
         return ResponseEntity.status(HttpStatus.CREATED).body(mapper.toDto(persistedCourse));
     }
 
-    @PutMapping("admin/course/{id}")
+    @PutMapping("admin/courses/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation("Update course")
     public ResponseEntity<CourseDto> update(@PathVariable Long id, @RequestBody CourseRequestToUpdate request) {
@@ -90,7 +90,7 @@ public class CourseController {
         return ResponseEntity.ok(mapper.toDto(updatedCourse));
     }
 
-    @DeleteMapping("admin/course/{id}")
+    @DeleteMapping("admin/courses/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation("Delete course")
     public ResponseEntity<MessageResponse> deleteCourseById(@PathVariable Long id) {
@@ -98,7 +98,7 @@ public class CourseController {
         return ResponseEntity.ok(new MessageResponse("Course deleted successfully."));
     }
 
-    @PostMapping("user/{courseId}/enroll")
+    @PostMapping("user/courses/{courseId}/enroll")
     @PreAuthorize("hasRole('USER')")
     @ApiOperation("Start course")
     public ResponseEntity<MessageResponse> startCourse(@PathVariable("courseId") Long courseId, @RequestParam("userId") Long userId) {
@@ -106,7 +106,7 @@ public class CourseController {
         return ResponseEntity.ok(new MessageResponse("Course started successfully."));
     }
 
-    @PostMapping("user/{courseId}/complete")
+    @PostMapping("user/courses/{courseId}/complete")
     @PreAuthorize("hasRole('USER')")
     @ApiOperation("Complete course")
     public ResponseEntity<MessageResponse> completeCourse(@PathVariable("courseId") Long courseId, @RequestParam("userId") Long userId) {
@@ -114,7 +114,7 @@ public class CourseController {
         return ResponseEntity.ok(new MessageResponse("Course completed successfully."));
     }
 
-    @DeleteMapping("user/{courseId}/remove")
+    @DeleteMapping("user/courses/{courseId}/remove")
     @PreAuthorize("hasRole('USER')")
     @ApiOperation("Leave course")
     public ResponseEntity<MessageResponse> deleteCourse(@PathVariable("courseId") Long courseId, @RequestParam("userId") Long userId) {
@@ -122,7 +122,7 @@ public class CourseController {
         return ResponseEntity.ok(new MessageResponse("Course left successfully."));
     }
 
-    @PostMapping("user/course/rating")
+    @PostMapping("user/courses/rating")
     @PreAuthorize("hasRole('USER')")
     @ApiOperation("Add rating")
     public ResponseEntity<RatingDto> addRating(@RequestBody RatingDto ratingDto) {
@@ -130,7 +130,7 @@ public class CourseController {
         return ResponseEntity.ok(ratingMapper.toDto(persistedRating));
     }
 
-    @PostMapping("/course/filter")
+    @PostMapping("/courses/filter")
     @ApiOperation("Filter courses")
     public ResponseEntity<Page<CourseDto>> filterCourses(@RequestBody CourseFilterDto filterRequest) {
         Page<CourseDto> page = service.getCourses(filterRequest).map(mapper::toDto);

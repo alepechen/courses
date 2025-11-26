@@ -2,10 +2,14 @@ package com.example.course.service;
 
 import com.example.course.dao.CourseRepository;
 import com.example.course.dao.UserCourseRepository;
+import com.example.course.dao.UserRepository;
 import com.example.course.dao.entity.Course;
 import com.example.course.dao.entity.CourseStatus;
+import com.example.course.dao.entity.User;
 import com.example.course.dao.entity.UserCourse;
+import com.example.course.dto.CourseEnrollmentEventDto;
 import com.example.course.dto.CourseFilterDto;
+import com.example.course.producer.EnrollmentEventProducer;
 import com.example.course.spec.CourseSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +32,12 @@ public class CourseService {
     private final CourseRepository courseRepository;
 
     private final UserCourseRepository userCourseRepository;
+
+    private final UserRepository userRepository;
+
+    private final EnrollmentEventProducer eventProducer;
+
+    private final OutboxService outboxService;
 
     @Transactional(readOnly = true)
     public List<Course> findAll() {
@@ -62,6 +73,14 @@ public class CourseService {
     public void startCourse(Long courseId, Long userId) {
         UserCourse userCourse = new UserCourse(userId, courseId, CourseStatus.STARTED);
         userCourseRepository.save(userCourse);
+        String enrollmentId = UUID.randomUUID().toString();
+        User user = userRepository.findById(userId).orElseThrow();
+        Course course = courseRepository.findById(courseId).orElseThrow();
+        CourseEnrollmentEventDto event = new CourseEnrollmentEventDto(
+                enrollmentId, userId, user.getEmail(), user.getUsername(),
+                courseId, course.getTitle()
+        );
+        outboxService.saveEnrollmentEvent(event);
     }
 
     @Transactional

@@ -25,14 +25,14 @@ public class LessonController {
     private final LessonService service;
     private final LessonMapper mapper;
 
-    @GetMapping("/lesson/{id}")
+    @GetMapping("/lessons/{id}")
     @ApiOperation("Get lesson")
     public ResponseEntity<LessonDto> findById(@PathVariable Long id) {
         return service.findById(id).map(lesson -> ResponseEntity.ok(mapper.toDto(lesson))).orElseThrow(() -> new NoSuchElementException("Lesson not found for ID: " + id));
 
     }
 
-    @PostMapping("admin/lesson")
+    @PostMapping("admin/lessons")
     @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation("Create lesson")
     public ResponseEntity<LessonDto> create(@RequestBody @Valid LessonRequest lessonDto) {
@@ -41,7 +41,7 @@ public class LessonController {
         return ResponseEntity.status(HttpStatus.CREATED).body(mapper.toDto(persistedLesson));
     }
 
-    @PutMapping("admin/lesson/{id}")
+    @PutMapping("admin/lessons/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation("Update lesson")
     public ResponseEntity<LessonDto> update(@PathVariable Long id, @RequestBody LessonRequest request) {
@@ -52,7 +52,7 @@ public class LessonController {
         return ResponseEntity.ok(mapper.toDto(updatedLesson));
     }
 
-    @DeleteMapping("admin/lesson/{id}")
+    @DeleteMapping("admin/lessons/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation("Delete lesson")
     public ResponseEntity<MessageResponse> deleteLesson(@PathVariable Long id) {
@@ -60,7 +60,7 @@ public class LessonController {
         return ResponseEntity.ok(new MessageResponse("Lesson deleted successfully."));
     }
 
-    @PutMapping("user/course/lesson/{id}/complete")
+    @PutMapping("user/lessons/{id}/complete")
     @PreAuthorize("hasRole('USER')")
     @ApiOperation("Complete lesson")
     public ResponseEntity<MessageResponse> completeLesson(@PathVariable Long id, @RequestParam("userId") Long userId) {

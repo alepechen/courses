@@ -149,4 +149,35 @@
             <column name="role" type="varchar(50)"/>
         </addColumn>
     </changeSet>
+    <changeSet id="create-outbox-events-table" author="AP">
+        <createTable tableName="outbox_events" schemaName="public">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="event_id" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="event_type" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="payload" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="published" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="published_at" type="TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="add-id-auto-increment" author="AP">
+        <addAutoIncrement
+                tableName="outbox_events"
+                columnName="id"
+                columnDataType="BIGINT"
+                schemaName="public"
+        />
+    </changeSet>
 </databaseChangeLog>

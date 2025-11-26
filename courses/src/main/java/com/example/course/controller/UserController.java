@@ -26,7 +26,7 @@ public class UserController {
     private final UserService service;
     private final UserMapper mapper;
 
-    @GetMapping("admin/user")
+    @GetMapping("admin/users")
     @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation("Get users")
     public ResponseEntity<List<UserDto>> findAll() {
@@ -40,7 +40,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("admin/user/{id}")
+    @GetMapping("admin/users/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation("Get user")
     public ResponseEntity<UserDto> findById(@PathVariable Long id) {
@@ -50,7 +50,7 @@ public class UserController {
 
     }
 
-    @PostMapping("admin/user")
+    @PostMapping("admin/users")
     @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation("Create user")
     public ResponseEntity<UserDto> create(@RequestBody @Valid UserCreateDto userCreateDto) {
@@ -58,7 +58,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(mapper.toDto(persistedUser));
     }
 
-    @PutMapping("admin/user/{id}")
+    @PutMapping("admin/users/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation("Update user")
     public ResponseEntity<UserDto> update(@PathVariable Long id,
@@ -70,7 +70,7 @@ public class UserController {
         return ResponseEntity.ok(mapper.toDto(updatedUser));
     }
 
-    @DeleteMapping("admin/user/{id}")
+    @DeleteMapping("admin/users/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation("Delete user")
     public ResponseEntity<MessageResponse> deleteUser(@PathVariable Long id) {

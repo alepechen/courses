@@ -11,12 +11,15 @@ import com.example.course.dao.entity.User;
 import com.example.course.dao.entity.UserCourse;
 import com.example.course.dto.UserCreateDto;
 import com.example.course.mapper.UserMapper;
+import com.example.course.producer.EnrollmentEventProducer;
 import com.example.course.testutil.DBTest;
 import com.example.course.testutil.TestDataFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.kafka.core.KafkaTemplate;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -42,21 +45,16 @@ public class CourseServiceTest {
     private UserMapper userMapper;
     @Autowired
     private DataSource dataSource;
-
+    @MockBean
+    private EnrollmentEventProducer enrollmentEventProducer;
+    @MockBean
+    private OutboxService outboxService;
     @BeforeEach
     void beforeEach() {
         userCourseRepository.deleteAll();
         ratingRepository.deleteAll();
         courseRepository.deleteAll();
         userRepository.deleteAll();
-    }
-
-
-    @Test
-    void printActualDatasourceUrl() throws Exception {
-        try (Connection conn = dataSource.getConnection()) {
-            System.out.println("🔍 Connected to: " + conn.getMetaData().getURL());
-        }
     }
 
     @Test
