@@ -2,13 +2,13 @@ Backend API for a Learning Management System (LMS) built using Java, Spring Boot
 
 🚀 Tech Stack
 
-Spring Boot
-Spring Data JPA (Hibernate)
-Spring Security (JWT-based authentication)
-PostgreSQL
-Apache Kafka
-Docker
-Mockito, JUnit
+- Spring Boot
+- Spring Data JPA (Hibernate)
+- Spring Security (JWT-based authentication)
+- PostgreSQL
+- Apache Kafka
+- Docker
+- Mockito, JUnit
 
 🛠️ Features 
 
