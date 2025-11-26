@@ -14,35 +14,35 @@ Backend API for a Learning Management System (LMS) built using Java, Spring Boot
 
 🔐 Authentication & Authorization
 
-Secure login using JWT (JSON Web Tokens)
-Role-based access control (Admin, Instructor, Student)
-Password encryption using BCrypt
+- Secure login using JWT (JSON Web Tokens)
+- Role-based access control (Admin, Instructor, Student)
+- Password encryption using BCrypt
 
 📚 Course Management
 
-Create, update, and delete courses (admin)
-Search and filter courses
+- Create, update, and delete courses (admin)
+- Search and filter courses
 
 🎓 Enrollment System
 
-Student enrollment in available courses
-Asynchronous email notifications on course registration with Kafka
+- Student enrollment in available courses
+- Asynchronous email notifications on course registration with Kafka
 
 📧 Event-Driven Email Notifications
 
-Kafka-based messaging for decoupled email service
-Outbox pattern implementation for reliable event delivery
+- Kafka-based messaging for decoupled email service
+- Outbox pattern implementation for reliable event delivery
 
 📊 Reporting & Dashboard (Prototype level)
 
-Basic statistics: number of users, courses, enrollments
+- Basic statistics: number of users, courses, enrollments
 
 🗄️ Database Integration
 
-PostgreSQL for persistent storage
-ORM with Hibernate / Spring Data JPA
+- PostgreSQL for persistent storage
+- ORM with Hibernate / Spring Data JPA
 
 🌐 RESTful API Design
 
-Clean and consistent REST API endpoints
-JSON-based request/response structures
+- Clean and consistent REST API endpoints
+- JSON-based request/response structures
